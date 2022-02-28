@@ -1,35 +1,41 @@
 import React from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { ThemeProvider } from "styled-components";
-import { hourSelector, minuteState } from "./atom";
-import { Theme } from "./Theme";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 function App() {
-  const [minutes, setMinutes] = useRecoilState(minuteState);
-  const [hours, setHours] = useRecoilState(hourSelector);
-  const onMinutesChange = (event: React.FormEvent<HTMLInputElement>) => {
-    setMinutes(Number(event.currentTarget.value));
-  };
-  const onHourChange = (event: React.FormEvent<HTMLInputElement>) => {
-    setHours(Number(event.currentTarget.value));
-  };
+  const onDragEnd = () => {};
   return (
-    <ThemeProvider theme={Theme}>
+    <DragDropContext onDragEnd={onDragEnd}>
       <div>
-        <input
-          value={minutes}
-          onChange={onMinutesChange}
-          type="number"
-          placeholder="Minutes"
-        />
-        <input
-          value={hours}
-          onChange={onHourChange}
-          type="number"
-          placeholder="Hours"
-        />
+        <Droppable droppableId="one">
+          {(magic) => (
+            <ul ref={magic.innerRef} {...magic.droppableProps}>
+              <Draggable draggableId="first" index={0}>
+                {(magic) => (
+                  <li
+                    ref={magic.innerRef}
+                    {...magic.draggableProps}
+                    {...magic.dragHandleProps}
+                  >
+                    One
+                  </li>
+                )}
+              </Draggable>
+              <Draggable draggableId="second" index={1}>
+                {(magic) => (
+                  <li
+                    ref={magic.innerRef}
+                    {...magic.draggableProps}
+                    {...magic.dragHandleProps}
+                  >
+                    Two
+                  </li>
+                )}
+              </Draggable>
+            </ul>
+          )}
+        </Droppable>
       </div>
-    </ThemeProvider>
+    </DragDropContext>
   );
 }
 
